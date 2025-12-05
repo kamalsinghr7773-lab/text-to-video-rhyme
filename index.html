@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rhyme Video Generator</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    textarea { width: 100%; height: 150px; }
+    button { padding: 10px 20px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h2>Text → Rhyme Video Generator</h2>
+
+  <textarea id="text" placeholder="Enter rhyme text here..."></textarea>
+  <button onclick="generateVideo()">Generate Video</button>
+
+  <h3 id="status"></h3>
+  <video id="output" width="500" controls style="display:none;"></video>
+
+<script>
+async function generateVideo() {
+  const text = document.getElementById("text").value;
+  document.getElementById("status").innerText = "Generating scenes...";
+
+  const res = await fetch("https://YOUR_BACKEND_URL/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text })
+  });
+
+  const data = await res.json();
+
+  if (data.videoUrl) {
+    document.getElementById("status").innerText = "Video Ready!";
+    const video = document.getElementById("output");
+    video.src = data.videoUrl;
+    video.style.display = "block";
+  } else {
+    document.getElementById("status").innerText = "Error generating video.";
+  }
+}
+</script>
+
+</body>
+</html>
